@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+
+# Données — publiques et retéléchargeables, jamais commitées
+data/
+*.pdb
+*.cif
+*.jsonl
+*.json.txt
+*.npz
+*.pkl
+
+# Poids et checkpoints
+checkpoints/
+*.pt
+*.pth
+
+# Notebooks
+.ipynb_checkpoints/
+
+# macOS et éditeurs
+.DS_Store
+.vscode/
+.idea/
+
+# Secrets
+.env
