@@ -24,5 +24,8 @@ Progress
 Notes
 
 Using the CATH-based splits from Ingraham et al., where train and test sets share no CATH topology. A random split by chain would put homologous folds on both sides, and the score would mostly measure memorisation.
-
 Sequence recovery is the standard metric but an imperfect one: several sequences can fold into the same backbone, so a good prediction can still count as wrong.
+
+REFERENCE:
+Ingraham et al., Generative Models for Graph-Based Protein Design, NeurIPS 2019
+Dauparas et al., Robust deep learning-based protein sequence design using ProteinMPNN, Science 2022
