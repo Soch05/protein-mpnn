@@ -88,6 +88,24 @@ class ProteinDataset(Dataset):
                 torch.from_numpy(seq),
                 torch.from_numpy(mask).float())
 
+def Cbeta(X):
+    CA = X[:,:,1,:] #[B,L,3]
+    N  = X[:,:,0,:] #[B,L,3]
+    C = X[:,:,2,:] #[B,L,3]
+    O = X[:,:,3,:] #[B,L,3]
+
+    b = CA -  N #[B,L,3]
+    c = C -  CA #[B,L,3]
+    a = torch.cross(b, c, dim = -1) # cross product in order to create third axis (90°)
+    Cb = - 0.58273431 * a + 0.56802827 * b - 0.54067466 * c + CA #[B,L,3]
+
+    Cb = Cb.unsqueeze(2)#[B,L,3] --> #[B,L,1,3]
+
+
+    X = torch.concat([X, Cb], dim = 2) #[B,L,5,3]
+    print('Dimensions check ' , X.shape)
+    return X
+
 
 def collate_fn(batch):
     L_max = max([element[0].shape[0] for element in batch])
@@ -102,6 +120,8 @@ def collate_fn(batch):
         X[i, :L] = x
         S[i, :L] = seq
         mask[i, :L] = m
+
+    X = Cbeta(X) # add virtual Cbeta --> [B,L,5,3]
 
     return X, S, mask
 
@@ -118,27 +138,13 @@ val_loader = DataLoader(val_ds, batch_size= 8 , shuffle=False, collate_fn= colla
 test_loader = DataLoader(test_ds, batch_size= 8 , shuffle=False, collate_fn= collate_fn)
 
 
-#CREATION Cbeta virtuel 
-#b = CA − N; c = C − CA ; a = cross(b, c); Cβ = −0.58273431·a + 0.56802827·b − 0.54067466·c + CA
 
 
-
-#b = CA − N; c = C − CA ; a = cross(b, c); Cβ = −0.58273431·a + 0.56802827·b − 0.54067466·c + CA
-
-
-
-def Cbeta(X):
-    CA = X[:,:,1,:]
-    N  = X[:,:,0,:]
-    C = X[:,:,2,:]
-    O = X[:,:,3,:]
-
-    b = CA -  N
-    c = C -  CA
-    a = torch.cross(b, c, dim = -1)
-    Cb = - 0.58273431 * a + 0.56802827 * b - 0.54067466 * c + CA
-
-    X = torch.stack([N, CA, C, O, Cb], dim=2)
-    return X
+#TEST DIM 
+batch_X, batch_S, batch_mask = next(iter(train_loader))
+testXCbeta = Cbeta(batch_X)
+print(testXCbeta.shape)
+    
+    
 
     
