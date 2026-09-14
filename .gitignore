@@ -4,21 +4,18 @@ __pycache__/
 .venv/
 *.egg-info/
 
-# Données — publiques et retéléchargeables, jamais commitées
+# Données — publiques et retéléchargeables
 data/
 *.pdb
 *.cif
-*.jsonl
-*.json.txt
-*.npz
-*.pkl
 
 # Poids et checkpoints
 checkpoints/
 *.pt
 *.pth
 
-# Notebooks
+# Brouillons
+scratch.py
 .ipynb_checkpoints/
 
 # macOS et éditeurs
