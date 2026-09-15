@@ -38,8 +38,6 @@ class ProteinDataset(Dataset):
         seq = np.array([AA_TO_IDX.get(c, UNK_IDX) for c in entry['seq']],
                        dtype=np.int64)
 
-        
-
         return (torch.from_numpy(x),
                 torch.from_numpy(seq),
                 torch.from_numpy(mask).float())

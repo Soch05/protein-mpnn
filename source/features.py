@@ -19,10 +19,15 @@ def Cbeta(X):
 
 
 
-def pairwise_distances(A, B, eps = 1e-6):
-        d = A.unsqueeze(1) - B.unsqueeze(2)  # [B,1,L,3] - [B,L,1,3] = [B,L,L,3]
+def pairwise_distances(X1, X2, eps = 1e-6):
+        d = X1.unsqueeze(1) - X2.unsqueeze(2)  # [B,1,L,3] - [B,L,1,3] = [B,L,L,3]
 
         mat = torch.sqrt((d**2).sum(-1) + eps )  #[B,L,L]
         return mat
         
+
+def get_neighbour(X_ca, mask, k):
+        D = pairwise_distances(X_ca,X_ca)
+        mask2D = mask.unsqueeze(1) * mask.unsqueeze(2)  #[B,L,L]
+        D_adj = D * mask2D
 
