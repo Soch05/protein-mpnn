@@ -26,8 +26,15 @@ def pairwise_distances(X1, X2, eps = 1e-6):
         return mat
         
 
-def get_neighbour(X_ca, mask, k):
+def get_neighbours(X_ca, mask, k):
+        k  = min(k, X_ca.shape[1])
         D = pairwise_distances(X_ca,X_ca)
+
+        
         mask2D = mask.unsqueeze(1) * mask.unsqueeze(2)  #[B,L,L]
         D_adj = D * mask2D
+        sentinel = D_adj.max(dim=-1, keepdim=True).values + 1 # [B,L,1]
+        D_adj = D_adj +  (1 - mask2D)  *   sentinel # [B,L,L]
+        values, E_idx = torch.topk(D_adj, k, dim = -1, largest= False) # [B,L,K]
+        return values, E_idx 
 
